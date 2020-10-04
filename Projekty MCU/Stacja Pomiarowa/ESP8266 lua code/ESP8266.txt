@@ -1,0 +1,27 @@
+--wifi connection
+wifi.setmode(wifi.STATIONAP)
+wifi.sta.config("???","??????",true) 
+wifi.sta.autoconnect(1)
+
+--MQTT
+c=mqtt.Client("??????", 120, "?????", "????????")
+
+--callback on connect and disconnects
+c:on("connect", function(con) print("@")end)
+c:on("offline", function(con) print("%")end)
+
+c:on("message", function(conn,topic,data)
+    print(topic..":")
+    if data~=nil then
+        print(data)
+    end
+end)
+
+c:connect("io.adafruit.com",1883,0,function(conn)
+    print("@")
+    c:subscribe("michkrz/feeds/default",0,function(conn)
+ c:publish("michkrz/feeds/default","1",0,0,function(conn)
+       print("sent")
+ end)
+    end)
+end)
